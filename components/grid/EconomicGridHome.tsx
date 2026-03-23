@@ -9,17 +9,34 @@ type Props = {
   stories: NewsStory[];
   page: number;
   totalPages: number;
+  latestRail: Pick<
+    NewsStory,
+    "slug" | "title" | "category" | "publishedAt"
+  >[];
+  popularRail: Pick<
+    NewsStory,
+    "slug" | "title" | "category" | "publishedAt"
+  >[];
 };
 
 /**
  * Expanded economic grid home: hero + published stories from the shared store (admin-synced).
  */
-export function EconomicGridHome({ stories, page, totalPages }: Props) {
+export function EconomicGridHome({
+  stories,
+  page,
+  totalPages,
+  latestRail,
+  popularRail,
+}: Props) {
   return (
     <>
       <TopNav />
       <main className="mx-auto max-w-[1920px]">
-        <EconomicGridHero />
+        <EconomicGridHero
+          latestStories={latestRail}
+          popularStories={popularRail}
+        />
         <EconomicGridStoriesGrid stories={stories} />
         <StoriesPagination page={page} totalPages={totalPages} basePath="/" />
       </main>

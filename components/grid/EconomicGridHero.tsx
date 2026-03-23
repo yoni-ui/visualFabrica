@@ -1,8 +1,80 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { NewsStory } from "@/lib/content/story-types";
 import { BIRR_HERO_IMG } from "./constants";
 
-export function EconomicGridHero() {
+type RailStory = Pick<NewsStory, "slug" | "title" | "category" | "publishedAt">;
+
+function formatRailDate(iso: string): string {
+  try {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return "";
+  }
+}
+
+function HeroStoryRail({
+  label,
+  kicker,
+  stories,
+}: {
+  label: string;
+  kicker: string;
+  stories: RailStory[];
+}) {
+  return (
+    <div className="grid-item flex flex-col bg-black py-6 text-white">
+      <div className="slanted-label w-fit !bg-vc-green !text-xs !text-black">
+        {label}
+      </div>
+      <ul className="mt-6 flex flex-1 flex-col gap-0 border-t border-white/20 pt-4">
+        {stories.length === 0 ? (
+          <li className="py-3 text-sm italic text-white/50">
+            No published stories yet. Add one in the admin editor.
+          </li>
+        ) : (
+          stories.map((s) => (
+            <li
+              key={s.slug}
+              className="border-b border-white/10 last:border-b-0"
+            >
+              <Link
+                href={`/news/${encodeURIComponent(s.slug)}`}
+                className="group block py-3 transition-colors hover:bg-white/5"
+                prefetch={false}
+              >
+                <span className="font-label text-[9px] font-bold uppercase tracking-widest text-vc-green">
+                  {s.category}
+                </span>
+                <span className="mt-1 line-clamp-2 block font-headline text-sm font-bold leading-snug text-white group-hover:text-vc-green">
+                  {s.title}
+                </span>
+                <span className="mt-1.5 font-label text-[9px] uppercase tracking-wider text-white/40">
+                  {formatRailDate(s.publishedAt)}
+                </span>
+              </Link>
+            </li>
+          ))
+        )}
+      </ul>
+      <div className="mt-4 border-t border-white/20 pt-3">
+        <span className="font-label text-[10px] uppercase tracking-widest text-white/40">
+          {kicker}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+type Props = {
+  latestStories: RailStory[];
+  popularStories: RailStory[];
+};
+
+export function EconomicGridHero({ latestStories, popularStories }: Props) {
   return (
     <div className="dense-grid border-t border-[#e4e2e1]">
       <article className="grid-item group cursor-pointer border-r border-[#e4e2e1] lg:col-span-2">
@@ -43,34 +115,16 @@ export function EconomicGridHero() {
           </p>
         </Link>
       </article>
-      <div className="grid-item flex flex-col justify-between bg-black py-6 text-white">
-        <div className="slanted-label w-fit !bg-vc-green !text-xs !text-black">
-          Latest
-        </div>
-        <div className="mt-8 border-t border-white/20 pt-4">
-          <span className="font-label text-[10px] uppercase tracking-widest text-white/40">
-            Macro Watch
-          </span>
-          <p className="mt-2 text-sm italic text-white/80">
-            Real-time tracking of Ethiopia&apos;s primary economic indicators
-            and reform progress.
-          </p>
-        </div>
-      </div>
-      <div className="grid-item flex flex-col justify-between bg-black py-6 text-white">
-        <div className="slanted-label w-fit !bg-vc-green !text-xs !text-black">
-          Popular
-        </div>
-        <div className="mt-8 border-t border-white/20 pt-4">
-          <span className="font-label text-[10px] uppercase tracking-widest text-white/40">
-            Most Viewed
-          </span>
-          <p className="mt-2 text-sm italic text-white/80">
-            The visualizations sparking the most conversation across Addis
-            Ababa this week.
-          </p>
-        </div>
-      </div>
+      <HeroStoryRail
+        label="Latest"
+        kicker="New from the newsroom"
+        stories={latestStories}
+      />
+      <HeroStoryRail
+        label="Popular"
+        kicker="Deep reads and data features"
+        stories={popularStories}
+      />
     </div>
   );
 }
