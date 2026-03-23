@@ -41,6 +41,13 @@ export function EconomicGridNav() {
           ))}
         </div>
         <div className="flex items-center gap-4">
+          <Link
+            href="/news"
+            prefetch={false}
+            className="nav-link-grid hidden border-b-2 border-transparent opacity-60 transition-opacity hover:border-[#e4e2e1] hover:opacity-100 sm:inline"
+          >
+            Archive
+          </Link>
           <span className="material-symbols-outlined cursor-pointer text-xl">
             search
           </span>

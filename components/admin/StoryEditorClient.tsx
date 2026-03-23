@@ -1,14 +1,153 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import type { NewsStory } from "@/lib/content/story-types";
+
+const DEFAULT_THUMB =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDRRbx9AR2lhr3hSjxTDmIFiMuoNG5FPo5Bm3n9GBTBdlUjhUjM33uohn23NM8CF6kZrj5188GDgjROyYEj6ewNGlO72_qJhkAJbmWDNv2l1cPUDdfU6BNGRp9HTC0Mme8k64cMr88JEJOuJs7810X9N7rlS_jR5hOSqJvhkq54TPFxYUj9HO3Re9eHbXOOmR-FVuy-LRcfflai7Jstjg76-aPjqVTWKRF11rDAvNGm-1TIrVh7jBY9ps7V2wbRd6vi2svxtqQnnw";
 
 export function StoryEditorClient() {
-  const [title, setTitle] = useState("The Birr Collapse");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const [loading, setLoading] = useState(!!id);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [title, setTitle] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [body, setBody] = useState("");
+  const [author, setAuthor] = useState("Editorial");
+  const [category, setCategory] = useState("Economy");
+  const [categoryStyle, setCategoryStyle] =
+    useState<NewsStory["categoryStyle"]>("economy");
+  const [thumb, setThumb] = useState(DEFAULT_THUMB);
+  const [slug, setSlug] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+
+  const load = useCallback(async () => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    const res = await fetch(`/api/admin/stories/${encodeURIComponent(id)}`);
+    if (!res.ok) {
+      setError("Could not load this story.");
+      setLoading(false);
+      return;
+    }
+    const data = (await res.json()) as { story: NewsStory };
+    const s = data.story;
+    setTitle(s.title);
+    setExcerpt(s.excerpt);
+    setBody(s.body);
+    setAuthor(s.author);
+    setCategory(s.category);
+    setCategoryStyle(s.categoryStyle);
+    setThumb(s.thumb || DEFAULT_THUMB);
+    setSlug(s.slug);
+    setMetaDescription(s.metaDescription);
+    setLoading(false);
+  }, [id]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const save = async (status: "draft" | "published") => {
+    setSaving(true);
+    setError(null);
+    const payload = {
+      title,
+      excerpt,
+      body,
+      author,
+      category,
+      categoryStyle,
+      status,
+      thumb,
+      metaDescription,
+      slug: slug.trim() || undefined,
+    };
+    try {
+      const res = id
+        ? await fetch(`/api/admin/stories/${encodeURIComponent(id)}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+        : await fetch("/api/admin/stories", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError((err as { error?: string }).error || "Save failed.");
+        setSaving(false);
+        return;
+      }
+      router.push("/admin/content");
+      router.refresh();
+    } catch {
+      setError("Network error while saving.");
+    }
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="p-12 font-body text-on-surface-variant">
+        Loading story…
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full flex-col lg:flex-row">
       <div className="mx-auto flex max-w-4xl flex-1 flex-col overflow-y-auto p-8 lg:p-12">
+        {error ? (
+          <p className="mb-6 rounded-lg bg-error/10 px-4 py-3 font-body text-sm text-error">
+            {error}
+          </p>
+        ) : null}
+        <div className="mb-8 flex flex-wrap gap-3">
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => save("draft")}
+            className="rounded-lg border border-outline-variant/30 px-5 py-2.5 font-label text-xs font-bold uppercase tracking-wider text-on-surface transition-colors hover:bg-surface-container disabled:opacity-50"
+          >
+            Save draft
+          </button>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => save("published")}
+            className="rounded-lg bg-primary px-5 py-2.5 font-label text-xs font-bold uppercase tracking-wider text-on-primary shadow-md shadow-primary/15 transition-colors hover:bg-primary-container disabled:opacity-50"
+          >
+            {saving ? "Saving…" : "Publish"}
+          </button>
+          {id && slug ? (
+            <a
+              href={`/news/${encodeURIComponent(slug)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/30 px-5 py-2.5 font-label text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:bg-surface-container"
+            >
+              <span className="material-symbols-outlined text-base">
+                open_in_new
+              </span>
+              Preview (if published)
+            </a>
+          ) : null}
+        </div>
+
         <div className="mb-12 flex items-start gap-8">
           <div className="mt-4 h-32 w-1.5 shrink-0 rounded-full bg-primary-container" />
           <div className="flex-1">
@@ -16,150 +155,90 @@ export function StoryEditorClient() {
               Lead Narrative
             </label>
             <input
-              className="w-full border-none bg-transparent p-0 font-headline text-5xl font-extrabold tracking-tighter text-on-surface placeholder:text-surface-dim focus:ring-0 md:text-7xl"
+              className="w-full border-none bg-transparent p-0 font-headline text-4xl font-extrabold tracking-tighter text-on-surface placeholder:text-surface-dim focus:ring-0 md:text-6xl"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter title..."
+              placeholder="Story title…"
             />
-            <p className="mt-6 font-body text-xl italic text-on-surface-variant">
-              A visual investigation into emerging market liquidity.
-            </p>
+            <textarea
+              className="mt-6 w-full resize-none border-none bg-transparent font-body text-xl italic leading-relaxed text-on-surface-variant placeholder:text-outline focus:ring-0"
+              rows={2}
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              placeholder="Short dek / summary for cards and SEO…"
+            />
           </div>
         </div>
 
-        <div className="editorial-shadow mb-12 overflow-hidden rounded-lg bg-surface-container-lowest">
-          <div className="flex items-center gap-4 border-b border-outline-variant/10 bg-surface-container-low px-6 py-3">
-            {["format_bold", "format_italic", "format_quote"].map((icon) => (
-              <button
-                key={icon}
-                type="button"
-                className="rounded p-1.5 hover:bg-surface-container-highest"
-              >
-                <span className="material-symbols-outlined text-xl">{icon}</span>
-              </button>
-            ))}
-            <div className="mx-1 h-6 w-px bg-outline-variant/30" />
-            {["format_list_bulleted", "link"].map((icon) => (
-              <button
-                key={icon}
-                type="button"
-                className="rounded p-1.5 hover:bg-surface-container-highest"
-              >
-                <span className="material-symbols-outlined text-xl">{icon}</span>
-              </button>
-            ))}
-            <div className="mx-1 h-6 w-px bg-outline-variant/30" />
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded px-3 py-1 font-label text-xs font-bold hover:bg-surface-container-highest"
+        <div className="editorial-shadow mb-10 overflow-hidden rounded-lg bg-surface-container-lowest">
+          <div className="border-b border-outline-variant/10 bg-surface-container-low px-6 py-3 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+            Body (use blank lines between paragraphs)
+          </div>
+          <textarea
+            className="min-h-[360px] w-full resize-y border-none bg-transparent p-8 font-body text-lg leading-relaxed text-on-surface focus:ring-0 md:text-xl"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Write the full story…"
+          />
+        </div>
+
+        <div className="mb-10 grid gap-6 md:grid-cols-2">
+          <div>
+            <label className="mb-2 block font-label text-[10px] font-bold uppercase text-on-surface-variant">
+              Author
+            </label>
+            <input
+              className="w-full rounded-lg border border-outline-variant/20 bg-surface-container-lowest px-4 py-3 font-body text-sm focus:ring-1 focus:ring-primary/20"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="mb-2 block font-label text-[10px] font-bold uppercase text-on-surface-variant">
+              Category label
+            </label>
+            <input
+              className="w-full rounded-lg border border-outline-variant/20 bg-surface-container-lowest px-4 py-3 font-body text-sm focus:ring-1 focus:ring-primary/20"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="mb-2 block font-label text-[10px] font-bold uppercase text-on-surface-variant">
+              Category style
+            </label>
+            <select
+              className="w-full rounded-lg border border-outline-variant/20 bg-surface-container-lowest px-4 py-3 font-body text-sm focus:ring-1 focus:ring-primary/20"
+              value={categoryStyle}
+              onChange={(e) =>
+                setCategoryStyle(e.target.value as NewsStory["categoryStyle"])
+              }
             >
-              Newsreader Serif
-              <span className="material-symbols-outlined text-sm">
-                expand_more
-              </span>
-            </button>
+              <option value="economy">Economy</option>
+              <option value="digital">Digital</option>
+              <option value="tech">Tech</option>
+            </select>
           </div>
-          <div className="min-h-[400px] p-10 focus:outline-none">
-            <p className="mb-6 font-body text-2xl leading-relaxed text-on-surface">
-              The recent volatility in the Ethiopian Birr has sent shockwaves
-              through the Horn of Africa’s financial ecosystem. What began as a
-              controlled float quickly spiraled into a systemic devaluation that
-              has challenged decades of monetary orthodoxy.
-            </p>
-            <p className="mb-6 font-body text-2xl leading-relaxed text-on-surface">
-              To understand the collapse, one must look past the simple exchange
-              rate charts and into the underlying mechanics of sovereign debt and
-              hard currency reserves.
-            </p>
-            <div className="my-10 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-low/50 p-8 text-on-surface-variant">
-              <span className="material-symbols-outlined mb-4 text-4xl">
-                add_chart
-              </span>
-              <p className="font-label font-medium">
-                Click to insert Data Visualization Block
-              </p>
-            </div>
+          <div>
+            <label className="mb-2 block font-label text-[10px] font-bold uppercase text-on-surface-variant">
+              Hero image URL
+            </label>
+            <input
+              className="w-full rounded-lg border border-outline-variant/20 bg-surface-container-lowest px-4 py-3 font-body text-sm focus:ring-1 focus:ring-primary/20"
+              value={thumb}
+              onChange={(e) => setThumb(e.target.value)}
+            />
           </div>
         </div>
-
-        <div className="mb-12 rounded-xl bg-surface-container-low p-8">
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h3 className="font-headline text-xl font-bold tracking-tight">
-                Data Visualization Block
-              </h3>
-              <p className="font-label text-sm text-on-surface-variant">
-                Interactive chart configuration
-              </p>
-            </div>
-            <div className="flex gap-2 rounded-lg bg-surface-container-highest p-1">
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-bold text-xs text-on-primary"
-              >
-                <span className="material-symbols-outlined text-sm">
-                  show_chart
-                </span>
-                Line Chart
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded px-4 py-2 font-bold text-xs text-on-surface-variant transition-all hover:bg-surface"
-              >
-                <span className="material-symbols-outlined text-sm">
-                  bar_chart
-                </span>
-                Bar Chart
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded px-4 py-2 font-bold text-xs text-on-surface-variant transition-all hover:bg-surface"
-              >
-                <span className="material-symbols-outlined text-sm">public</span>
-                Map
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="rounded-lg border border-outline-variant/15 bg-surface-container-lowest p-6">
-                <label className="mb-4 block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                  Source Data
-                </label>
-                <div className="group flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-outline-variant/30 p-10 transition-all hover:border-primary/40">
-                  <span className="material-symbols-outlined mb-3 text-3xl text-outline transition-colors group-hover:text-primary">
-                    cloud_upload
-                  </span>
-                  <p className="text-xs font-bold text-on-surface-variant">
-                    Upload CSV or JSON
-                  </p>
-                  <p className="mt-1 text-[10px] text-outline">
-                    Max file size: 10MB
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-6">
-              <div className="flex h-full min-h-[200px] flex-col rounded-lg border border-outline-variant/15 bg-surface-container-lowest p-6">
-                <label className="mb-4 block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                  Preview Analysis
-                </label>
-                <div className="flex flex-1 flex-col items-center justify-center opacity-40">
-                  <div className="relative mb-4 h-32 w-full">
-                    <Image
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBykIoEK4ExuPiKC-e9aCQUL4R2uuG6BeuFmqcLyJYPiavlW2e8l6tJ0Fs-wlKOAtLqQT2wEfXLnPAKAhxcby80hELAD_bhuuhjyhKtbY8hEvIxOOYlJqXSLbNUiKtiU6NDWwpNcUWPkfNuPP1ncewMSzo6U992R3sI56yORtKuhUubo6QM4lJj_rclmnUFIR5r4QPhmjyCVwz4JiABo2lFz6kfQMr03Ql3AIWh9WYLLBbMgAbiPLKawMknl6HxbdfqzJ1vQfXylA"
-                      alt=""
-                      fill
-                      className="object-contain grayscale"
-                    />
-                  </div>
-                  <p className="font-body text-xs italic">
-                    Connect data to generate preview
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="relative mb-12 aspect-video max-h-64 w-full overflow-hidden rounded-lg bg-surface-container-low">
+          <Image
+            src={thumb || DEFAULT_THUMB}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 896px) 100vw, 896px"
+            unoptimized={thumb.startsWith("http")}
+          />
         </div>
       </div>
 
@@ -171,7 +250,7 @@ export function StoryEditorClient() {
                 search_check
               </span>
               <h4 className="font-headline text-sm font-bold tracking-tight">
-                SEO Metadata
+                SEO &amp; URL
               </h4>
             </div>
             <div className="space-y-4">
@@ -181,81 +260,27 @@ export function StoryEditorClient() {
                 </label>
                 <input
                   className="w-full rounded border-none bg-surface-container-lowest p-3 text-xs focus:ring-1 focus:ring-primary/20"
-                  defaultValue="the-birr-collapse-2024"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  placeholder="auto from title if empty"
                 />
+                <p className="mt-1 text-[10px] text-on-surface-variant">
+                  Public URL: /news/
+                  {slug || "…"}
+                </p>
               </div>
               <div>
                 <label className="mb-2 block text-[10px] font-bold uppercase text-on-surface-variant">
-                  Meta Description
+                  Meta description
                 </label>
                 <textarea
                   className="h-24 w-full resize-none rounded border-none bg-surface-container-lowest p-3 text-xs leading-relaxed focus:ring-1 focus:ring-primary/20"
-                  defaultValue="An in-depth data study of the Ethiopian Birr's recent market fluctuations and economic implications for the regional trade block."
+                  value={metaDescription}
+                  onChange={(e) => setMetaDescription(e.target.value)}
                 />
               </div>
             </div>
           </section>
-          <section>
-            <div className="mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-xl text-primary">
-                label
-              </span>
-              <h4 className="font-headline text-sm font-bold tracking-tight">
-                Taxonomy &amp; Tags
-              </h4>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {["ECONOMY", "CURRENCY", "AFRICA"].map((tag) => (
-                <span
-                  key={tag}
-                  className="flex items-center gap-1 rounded-full bg-secondary-container px-3 py-1 font-label text-[10px] font-bold text-on-secondary-container"
-                >
-                  {tag}
-                  <span className="material-symbols-outlined cursor-pointer text-[10px]">
-                    close
-                  </span>
-                </span>
-              ))}
-              <button
-                type="button"
-                className="rounded-full border border-outline-variant/30 px-3 py-1 font-label text-[10px] font-bold transition-colors hover:bg-surface-container-highest"
-              >
-                + ADD TAG
-              </button>
-            </div>
-          </section>
-          <section className="rounded-xl bg-surface-container-lowest p-6">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="font-headline text-xs font-bold">Download PDF</span>
-              <div className="relative inline-flex cursor-pointer items-center">
-                <input type="checkbox" className="peer sr-only" defaultChecked />
-                <div className="peer relative h-5 w-9 rounded-full bg-outline-variant/30 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:bg-primary peer-checked:after:translate-x-full" />
-              </div>
-            </div>
-            <p className="text-[10px] leading-tight text-on-surface-variant">
-              Enable full-quality infographic exports for registered subscribers.
-            </p>
-          </section>
-          <div className="border-t border-outline-variant/10 pt-6">
-            <div className="mb-2 flex justify-between text-xs">
-              <span className="font-medium text-on-surface-variant">
-                Word Count
-              </span>
-              <span className="font-bold">1,248</span>
-            </div>
-            <div className="mb-2 flex justify-between text-xs">
-              <span className="font-medium text-on-surface-variant">
-                Read Time
-              </span>
-              <span className="font-bold">6 min</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="font-medium text-on-surface-variant">
-                Visual Assets
-              </span>
-              <span className="font-bold text-primary">4 active</span>
-            </div>
-          </div>
         </div>
       </aside>
     </div>

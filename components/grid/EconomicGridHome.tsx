@@ -1,20 +1,27 @@
-import { EconomicGridCardGrid } from "./EconomicGridCardGrid";
+import type { NewsStory } from "@/lib/content/story-types";
 import { EconomicGridFooter } from "./EconomicGridFooter";
 import { EconomicGridHero } from "./EconomicGridHero";
 import { EconomicGridNav } from "./EconomicGridNav";
-import { EconomicGridPagination } from "./EconomicGridPagination";
+import { EconomicGridStoriesGrid } from "./EconomicGridStoriesGrid";
+import { StoriesPagination } from "./StoriesPagination";
+
+type Props = {
+  stories: NewsStory[];
+  page: number;
+  totalPages: number;
+};
 
 /**
- * Full VisualFabrica expanded economic grid home (matches `das/visualfabrica_expanded_economic_grid/code.html`).
+ * Expanded economic grid home: hero + published stories from the shared store (admin-synced).
  */
-export function EconomicGridHome() {
+export function EconomicGridHome({ stories, page, totalPages }: Props) {
   return (
     <>
       <EconomicGridNav />
       <main className="mx-auto max-w-[1920px]">
         <EconomicGridHero />
-        <EconomicGridCardGrid />
-        <EconomicGridPagination />
+        <EconomicGridStoriesGrid stories={stories} />
+        <StoriesPagination page={page} totalPages={totalPages} basePath="/" />
       </main>
       <EconomicGridFooter />
     </>

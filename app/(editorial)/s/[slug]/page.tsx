@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const titles: Record<string, string> = {
   about: "About",
   contact: "Contact",
   privacy: "Privacy Policy",
   terms: "Terms of Service",
-  archive: "Archive",
 };
 
 export function generateStaticParams() {
@@ -19,6 +18,9 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (slug === "archive") {
+    redirect("/news");
+  }
   const title = titles[slug];
   if (!title) notFound();
 

@@ -1,7 +1,9 @@
+import { timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 import {
   ADMIN_SESSION_COOKIE,
   createAdminSessionToken,
+  getAdminCookieSecure,
   getAdminPassword,
 } from "@/lib/admin-auth";
 
@@ -13,25 +15,48 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const password = body.password ?? "";
-  const expected = getAdminPassword();
-  const ok =
-    password.length > 0 &&
-    password.length === expected.length &&
-    (await import("crypto")).timingSafeEqual(
-      Buffer.from(password),
-      Buffer.from(expected),
+  let expected: string;
+  try {
+    expected = getAdminPassword();
+  } catch {
+    return NextResponse.json(
+      {
+        error:
+          "Admin sign-in is not configured. Set ADMIN_PASSWORD in your hosting environment.",
+      },
+      { status: 503 },
     );
+  }
+
+  const submitted = String(body.password ?? "").trim();
+  const a = Buffer.from(submitted, "utf8");
+  const b = Buffer.from(expected, "utf8");
+  const ok =
+    submitted.length > 0 &&
+    a.length === b.length &&
+    timingSafeEqual(a, b);
 
   if (!ok) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const token = await createAdminSessionToken();
+  let token: string;
+  try {
+    token = await createAdminSessionToken();
+  } catch {
+    return NextResponse.json(
+      {
+        error:
+          "JWT secret missing or too short. Set ADMIN_AUTH_SECRET (16+ characters) in production.",
+      },
+      { status: 503 },
+    );
+  }
+
   const res = NextResponse.json({ ok: true });
   res.cookies.set(ADMIN_SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: getAdminCookieSecure(),
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,

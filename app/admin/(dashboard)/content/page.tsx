@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContentQuickFilters } from "@/components/admin/ContentQuickFilters";
 import { ContentStoriesTable } from "@/components/admin/ContentStoriesTable";
+import { listAllStoriesAdmin } from "@/lib/content/stories-store";
 
 export const metadata: Metadata = {
   title: "Content",
 };
 
-export default function AdminContentPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminContentPage() {
+  const stories = await listAllStoriesAdmin();
+  const published = stories.filter((s) => s.status === "published").length;
+
   return (
     <>
       <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -27,6 +33,7 @@ export default function AdminContentPage() {
         </div>
         <Link
           href="/admin/editor"
+          prefetch={false}
           className="flex items-center gap-2 rounded bg-primary px-6 py-3 font-headline font-bold text-on-primary shadow-lg shadow-primary/10 transition-all hover:scale-[1.02] hover:bg-primary-container"
         >
           <span className="material-symbols-outlined text-sm">add</span>
@@ -44,7 +51,7 @@ export default function AdminContentPage() {
               Live Content
             </p>
             <p className="font-headline text-2xl font-black tracking-tighter text-primary">
-              1,284
+              {published}
             </p>
           </div>
           <span className="material-symbols-outlined text-3xl text-primary/30">
@@ -53,7 +60,7 @@ export default function AdminContentPage() {
         </div>
       </div>
 
-      <ContentStoriesTable />
+      <ContentStoriesTable initialStories={stories} />
 
       <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="space-y-4 rounded-xl bg-primary-container/10 p-8">

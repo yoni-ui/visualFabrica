@@ -6,7 +6,7 @@ const footerLinks = [
   { href: "/s/contact", label: "Contact" },
   { href: "/s/privacy", label: "Privacy Policy" },
   { href: "/s/terms", label: "Terms of Service" },
-  { href: "/s/archive", label: "Archive" },
+  { href: "/news", label: "Archive" },
 ];
 
 export function SiteFooter() {

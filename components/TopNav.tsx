@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/markets", label: "Markets" },
   { href: "/economy/birr-collapse", label: "Economy" },
   { href: "/tech", label: "Tech" },
+  { href: "/news", label: "News" },
 ];
 
 export function TopNav() {
