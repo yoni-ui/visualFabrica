@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { VisualFabricaLogo } from "@/components/VisualFabricaLogo";
 
 const navLinks = [
   { href: "/markets", label: "Markets" },
@@ -16,12 +17,8 @@ export function TopNav() {
     <nav className="sticky top-0 z-50 w-full bg-surface/80 backdrop-blur-[16px]">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-10">
         <div className="flex items-center gap-8">
-          <Link
-            href="/"
-            className="font-headline text-2xl font-black tracking-tighter text-primary"
-            prefetch
-          >
-            VisualFabrica
+          <Link href="/" prefetch className="flex shrink-0 items-center">
+            <VisualFabricaLogo className="h-8 w-auto md:h-9" />
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             {navLinks.map((item) => {

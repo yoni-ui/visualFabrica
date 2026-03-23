@@ -32,7 +32,11 @@ export default async function Page({
       </h1>
       <p className="mt-6 max-w-xl font-body text-lg text-on-surface-variant">
         This section is a placeholder for editorial site chrome. Return to the{" "}
-        <Link href="/" className="text-primary underline-offset-4 hover:underline" prefetch>
+        <Link
+          href="/"
+          className="text-primary underline-offset-4 hover:underline"
+          prefetch
+        >
           home hub
         </Link>
         .

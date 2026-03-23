@@ -1,38 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Newsreader, Plus_Jakarta_Sans } from "next/font/google";
-import { TopNav } from "@/components/TopNav";
-import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
+const googleFontsHref =
+  "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap";
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-newsreader",
-  display: "swap",
-  style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["400", "500", "600"],
-});
+const materialSymbolsHref =
+  "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap";
 
 export const metadata: Metadata = {
   title: {
-    default: "VisualFabrica | Editorial Data",
+    default: "VisualFabrica | Ethiopia's Data, Visualized",
     template: "%s | VisualFabrica",
   },
   description:
-    "Premium editorial data stories — complex metrics as narrative.",
+    "Visualizing Ethiopia's most critical trends in business, technology, and the developing economy.",
 };
 
 export default function RootLayout({
@@ -41,15 +22,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${plusJakarta.variable} ${newsreader.variable} ${inter.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-surface text-on-surface">
-        <TopNav />
-        {children}
-        <SiteFooter />
-      </body>
+    <html lang="en" className="h-full antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link href={googleFontsHref} rel="stylesheet" />
+        <link href={materialSymbolsHref} rel="stylesheet" />
+      </head>
+      <body className="min-h-full bg-white text-on-surface">{children}</body>
     </html>
   );
 }
