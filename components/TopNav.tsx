@@ -15,8 +15,8 @@ export function TopNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-surface/80 backdrop-blur-[16px]">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-10">
+    <nav className="sticky top-0 z-50 w-full border-b border-[#e4e2e1] bg-white/90 backdrop-blur-[16px]">
+      <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-4 md:px-8 lg:px-10">
         <div className="flex items-center gap-8">
           <Link href="/" prefetch className="flex shrink-0 items-center">
             <VisualFabricaLogo className="h-8 w-auto md:h-9" />

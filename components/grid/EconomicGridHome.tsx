@@ -1,7 +1,7 @@
+import { TopNav } from "@/components/TopNav";
 import type { NewsStory } from "@/lib/content/story-types";
 import { EconomicGridFooter } from "./EconomicGridFooter";
 import { EconomicGridHero } from "./EconomicGridHero";
-import { EconomicGridNav } from "./EconomicGridNav";
 import { EconomicGridStoriesGrid } from "./EconomicGridStoriesGrid";
 import { StoriesPagination } from "./StoriesPagination";
 
@@ -17,7 +17,7 @@ type Props = {
 export function EconomicGridHome({ stories, page, totalPages }: Props) {
   return (
     <>
-      <EconomicGridNav />
+      <TopNav />
       <main className="mx-auto max-w-[1920px]">
         <EconomicGridHero />
         <EconomicGridStoriesGrid stories={stories} />

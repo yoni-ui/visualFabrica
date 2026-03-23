@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { STORIES_GRID_PAGE_SIZE } from "@/components/grid/constants";
 import { EconomicGridStoriesGrid } from "@/components/grid/EconomicGridStoriesGrid";
 import { StoriesPagination } from "@/components/grid/StoriesPagination";
 import { listPublishedPage } from "@/lib/content/stories-store";
@@ -11,8 +12,6 @@ export const metadata: Metadata = {
   description: "VisualFabrica editorial stories and data narratives.",
 };
 
-const PAGE_SIZE = 9;
-
 export default async function NewsArchivePage({
   searchParams,
 }: {
@@ -22,7 +21,7 @@ export default async function NewsArchivePage({
   const page = Math.max(1, parseInt(sp.page || "1", 10) || 1);
   const { items, page: current, totalPages } = await listPublishedPage(
     page,
-    PAGE_SIZE,
+    STORIES_GRID_PAGE_SIZE,
   );
 
   return (

@@ -1,3 +1,22 @@
+/** Desktop dense-grid column count (see globals.css `.dense-grid`). */
+export const DENSE_GRID_COLUMNS = 4;
+
+/**
+ * Stories per page on home + /news archive — a multiple of 4 so each page
+ * fills complete rows on desktop before pagination.
+ */
+export const STORIES_GRID_PAGE_SIZE = DENSE_GRID_COLUMNS * 3;
+
+/** Empty cells to pad the last row so the 4-column grid has no holes above pagination. */
+export function denseGridTrailingFillers(
+  itemCount: number,
+  columns = DENSE_GRID_COLUMNS,
+): number {
+  if (itemCount <= 0) return 0;
+  const r = itemCount % columns;
+  return r === 0 ? 0 : columns - r;
+}
+
 export const BIRR_HERO_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDYS61vjaSb22OU720HskOUwibAZ971aYiUWdYjnnfXuZohzszM36F132hZMQ67OkQ5SPvk81wI4tNr9JhcNY9GneTef8sru1t7C0L2LDkUXISh8NxxQAp6xhkQXfLs1hS-lJTNYe5dbHQjfPr5mz9ty6bLBRCo27xOGtCl-gloZEvv0SgaoVz3lgFjosat4y_51_-NFv6fWOh1e8svWz1WHKq-FcQ_lr_MpOvUV7hleRqJV-P-rYYElUMidBAoxa1ZsOHs8m0oqw";
 

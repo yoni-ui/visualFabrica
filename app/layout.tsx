@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -33,7 +33,12 @@ export default function RootLayout({
         <link href={googleFontsHref} rel="stylesheet" />
         <link href={materialSymbolsHref} rel="stylesheet" />
       </head>
-      <body className="min-h-full bg-white text-on-surface">{children}</body>
+      <body
+        className="min-h-full bg-white text-on-surface"
+        suppressHydrationWarning
+      >
+        {children}
+      </body>
     </html>
   );
 }

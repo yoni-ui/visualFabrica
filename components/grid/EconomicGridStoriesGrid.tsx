@@ -1,4 +1,5 @@
 import type { NewsStory } from "@/lib/content/story-types";
+import { denseGridTrailingFillers } from "./constants";
 import { StoryCard } from "./StoryCard";
 
 type Props = { stories: NewsStory[] };
@@ -17,10 +18,19 @@ export function EconomicGridStoriesGrid({ stories }: Props) {
       </div>
     );
   }
+  const fillers = denseGridTrailingFillers(stories.length);
+
   return (
     <div className="dense-grid">
       {stories.map((s) => (
         <StoryCard key={s.id} story={s} />
+      ))}
+      {Array.from({ length: fillers }, (_, i) => (
+        <div
+          key={`grid-fill-${i}`}
+          className="grid-item min-h-[1px] bg-white"
+          aria-hidden
+        />
       ))}
     </div>
   );
