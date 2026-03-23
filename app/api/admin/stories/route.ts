@@ -30,7 +30,12 @@ type PostBody = Partial<NewsStory> & {
 export async function POST(request: Request) {
   const denied = await requireAdminApi();
   if (denied) return denied;
-  const body = (await request.json()) as PostBody;
+  let body: PostBody;
+  try {
+    body = (await request.json()) as PostBody;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
   const title = (body.title || "").trim();
   if (!title) {
     return NextResponse.json({ error: "title is required" }, { status: 400 });

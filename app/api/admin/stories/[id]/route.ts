@@ -41,7 +41,18 @@ export async function PATCH(
   const denied = await requireAdminApi();
   if (denied) return denied;
   const { id } = await context.params;
-  const body = (await request.json()) as PatchBody;
+  let body: PatchBody;
+  try {
+    body = (await request.json()) as PatchBody;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  if (body.title !== undefined && !String(body.title).trim()) {
+    return NextResponse.json(
+      { error: "Title cannot be empty" },
+      { status: 400 },
+    );
+  }
   const story = await updateStory(id, body);
   if (!story) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
