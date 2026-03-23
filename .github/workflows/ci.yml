@@ -31,3 +31,6 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          ADMIN_AUTH_SECRET: ci-build-secret-min-32-characters-x
+          ADMIN_PASSWORD: ci

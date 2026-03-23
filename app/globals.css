@@ -32,6 +32,11 @@
   --color-on-secondary-container: #656464;
   --color-secondary: #5f5e5e;
   --color-tertiary: #1c3f7f;
+  --color-tertiary-container: #375798;
+  --color-on-tertiary-fixed-variant: #234585;
+  --color-on-background: #1b1c1c;
+  --color-inverse-on-surface: #f3f0f0;
+  --color-outline: #737785;
   --color-error: #ba1a1a;
   --color-vc-green: #86bc25;
   --font-sans-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
@@ -116,4 +121,21 @@ body {
 .ghost-edge {
   outline: 1px solid color-mix(in srgb, var(--color-outline-variant) 15%, transparent);
   outline-offset: -1px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.editorial-shadow {
+  box-shadow: 0 32px 48px -12px rgba(27, 28, 28, 0.04);
+}
+
+.insight-rail {
+  border-left: 3px solid var(--color-primary-container);
+  padding-left: 1rem;
 }
