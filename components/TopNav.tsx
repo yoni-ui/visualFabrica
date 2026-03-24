@@ -17,7 +17,7 @@ export function TopNav() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-[#e4e2e1] bg-white/90 backdrop-blur-[16px]">
-      <div className="mx-auto max-w-[1920px] px-4 py-4 md:px-8 lg:px-10">
+      <div className="mx-auto w-full max-w-[1280px] px-4 py-4 md:px-8 lg:px-10">
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 flex-1 items-center gap-8">
             <Link href="/" prefetch className="flex shrink-0 items-center">

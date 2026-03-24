@@ -4,7 +4,7 @@ import { VisualFabricaLogo } from "@/components/VisualFabricaLogo";
 export function EconomicGridFooter() {
   return (
     <footer className="bg-[#1b1c1c] px-6 py-12 text-white">
-      <div className="mx-auto grid max-w-[1920px] grid-cols-1 gap-12 md:grid-cols-4">
+      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-4">
         <div className="flex flex-col gap-6">
           <Link href="/" prefetch>
             <VisualFabricaLogo className="h-11 w-auto min-w-[156px] shrink-0 md:h-12 md:min-w-[176px]" invertForDark />
@@ -110,7 +110,7 @@ export function EconomicGridFooter() {
           </ul>
         </div>
       </div>
-      <div className="mx-auto mt-12 flex max-w-[1920px] items-center justify-between border-t border-white/10 pt-8">
+      <div className="mx-auto mt-12 flex w-full max-w-[1280px] items-center justify-between border-t border-white/10 pt-8">
         <span className="font-label text-[10px] text-white/40">
           © {new Date().getFullYear()} VisualFabrica Ethiopia. All rights
           reserved.
