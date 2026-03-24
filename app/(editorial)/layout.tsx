@@ -1,3 +1,4 @@
+import { EditorialViewportShell } from "@/components/EditorialViewportShell";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TopNav } from "@/components/TopNav";
 
@@ -7,10 +8,9 @@ export default function EditorialLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <TopNav />
+    <EditorialViewportShell nav={<TopNav />}>
       {children}
       <SiteFooter />
-    </>
+    </EditorialViewportShell>
   );
 }

@@ -113,6 +113,16 @@ body {
   font-family: var(--font-body);
 }
 
+/* Public pages: fixed overall height; nav unchanged; content scrolls below */
+.editorial-fixed-viewport {
+  height: 1280px;
+  max-height: 1280px;
+}
+
+.editorial-fixed-viewport-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
 ::selection {
   background: var(--color-primary-container);
   color: var(--color-on-primary-container);

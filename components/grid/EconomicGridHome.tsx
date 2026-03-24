@@ -1,3 +1,4 @@
+import { EditorialViewportShell } from "@/components/EditorialViewportShell";
 import { TopNav } from "@/components/TopNav";
 import type { FxSnapshot } from "@/lib/fx-snapshot";
 import type { NewsStory } from "@/lib/content/story-types";
@@ -24,8 +25,7 @@ export function EconomicGridHome({
   fx,
 }: Props) {
   return (
-    <>
-      <TopNav />
+    <EditorialViewportShell nav={<TopNav />}>
       <HomeCategoryStrip />
       <main className="mx-auto max-w-[1920px]">
         <EconomicGridHero fx={fx} />
@@ -33,6 +33,6 @@ export function EconomicGridHome({
         <StoriesPagination page={page} totalPages={totalPages} basePath="/" />
       </main>
       <EconomicGridFooter />
-    </>
+    </EditorialViewportShell>
   );
 }
