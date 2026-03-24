@@ -104,7 +104,7 @@ export default function BirrCollapsePage() {
               alt="ETB/USD exchange rate performance infographic"
               fill
               priority
-              sizes="(max-width: 1280px) 100vw, 1280px"
+              sizes="(max-width: 1440px) 100vw, 1440px"
               className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 transition-opacity group-hover:opacity-100">

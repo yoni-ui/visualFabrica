@@ -6,7 +6,7 @@ type Props = {
 };
 
 /**
- * Fixed 1280px-tall column: nav stays natural size; rest scrolls inside.
+ * Max 1440px wide, 1280px tall: nav unchanged; content scrolls below.
  */
 export function EditorialViewportShell({ nav, children }: Props) {
   return (
