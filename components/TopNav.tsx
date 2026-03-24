@@ -21,7 +21,7 @@ export function TopNav() {
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 flex-1 items-center gap-8">
             <Link href="/" prefetch className="flex shrink-0 items-center">
-              <VisualFabricaLogo className="h-8 w-auto md:h-9" />
+              <VisualFabricaLogo className="h-10 w-auto min-w-[140px] shrink-0 md:h-11 md:min-w-[160px]" />
             </Link>
             <div className="hidden items-center gap-6 md:flex">
               {navLinks.map((item) => {

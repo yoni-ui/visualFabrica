@@ -90,6 +90,12 @@
   flex-direction: column;
 }
 
+/* Hero ETB / cross-rate columns: full black (overrides .grid-item white) */
+.dense-grid .grid-item.hero-fx-dark {
+  background-color: #000000;
+  color: #ffffff;
+}
+
 @media (max-width: 1024px) {
   .dense-grid {
     grid-template-columns: repeat(2, 1fr);

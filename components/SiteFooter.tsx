@@ -15,7 +15,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 md:px-10">
         <div>
           <Link href="/" prefetch className="mb-4 inline-block">
-            <VisualFabricaLogo className="h-9 w-auto" />
+            <VisualFabricaLogo className="h-10 w-auto min-w-[148px] shrink-0 md:h-11 md:min-w-[168px]" />
           </Link>
           <p className="font-label text-xs font-medium uppercase leading-loose tracking-widest text-on-surface/50">
             © {new Date().getFullYear()} VisualFabrica Editorial. All rights

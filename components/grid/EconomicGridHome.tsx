@@ -1,22 +1,17 @@
 import { TopNav } from "@/components/TopNav";
+import type { FxSnapshot } from "@/lib/fx-snapshot";
 import type { NewsStory } from "@/lib/content/story-types";
 import { EconomicGridFooter } from "./EconomicGridFooter";
 import { EconomicGridHero } from "./EconomicGridHero";
 import { EconomicGridStoriesGrid } from "./EconomicGridStoriesGrid";
+import { HomeCategoryStrip } from "./HomeCategoryStrip";
 import { StoriesPagination } from "./StoriesPagination";
 
 type Props = {
   stories: NewsStory[];
   page: number;
   totalPages: number;
-  latestRail: Pick<
-    NewsStory,
-    "slug" | "title" | "category" | "publishedAt"
-  >[];
-  popularRail: Pick<
-    NewsStory,
-    "slug" | "title" | "category" | "publishedAt"
-  >[];
+  fx: FxSnapshot;
 };
 
 /**
@@ -26,17 +21,14 @@ export function EconomicGridHome({
   stories,
   page,
   totalPages,
-  latestRail,
-  popularRail,
+  fx,
 }: Props) {
   return (
     <>
       <TopNav />
+      <HomeCategoryStrip />
       <main className="mx-auto max-w-[1920px]">
-        <EconomicGridHero
-          latestStories={latestRail}
-          popularStories={popularRail}
-        />
+        <EconomicGridHero fx={fx} />
         <EconomicGridStoriesGrid stories={stories} />
         <StoriesPagination page={page} totalPages={totalPages} basePath="/" />
       </main>

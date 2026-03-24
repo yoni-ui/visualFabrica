@@ -64,41 +64,6 @@ function sortPublished(a: NewsStory, b: NewsStory): number {
   );
 }
 
-function wordCount(body: string): number {
-  const t = body.trim();
-  if (!t) return 0;
-  return t.split(/\s+/).filter(Boolean).length;
-}
-
-/**
- * Home hero “Latest” / “Popular” rails (published only).
- * Popular prefers stories not in Latest, ranked by body length as a simple engagement proxy.
- */
-export async function listHeroRailStories(count: number): Promise<{
-  latest: NewsStory[];
-  popular: NewsStory[];
-}> {
-  const all = await ensureStoriesFile();
-  const pub = all.filter((s) => s.status === "published").sort(sortPublished);
-  const latest = pub.slice(0, count);
-  const exclude = new Set(latest.map((s) => s.slug));
-  const pool = pub.filter((s) => !exclude.has(s.slug));
-  const popular = [...pool]
-    .sort((a, b) => wordCount(b.body) - wordCount(a.body))
-    .slice(0, count);
-  if (popular.length < count) {
-    const used = new Set(popular.map((s) => s.slug));
-    for (const s of pub) {
-      if (popular.length >= count) break;
-      if (!used.has(s.slug)) {
-        popular.push(s);
-        used.add(s.slug);
-      }
-    }
-  }
-  return { latest, popular: popular.slice(0, count) };
-}
-
 export async function listPublishedPage(
   page: number,
   pageSize: number,

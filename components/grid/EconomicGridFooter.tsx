@@ -7,7 +7,7 @@ export function EconomicGridFooter() {
       <div className="mx-auto grid max-w-[1920px] grid-cols-1 gap-12 md:grid-cols-4">
         <div className="flex flex-col gap-6">
           <Link href="/" prefetch>
-            <VisualFabricaLogo className="h-10 w-auto" invertForDark />
+            <VisualFabricaLogo className="h-11 w-auto min-w-[156px] shrink-0 md:h-12 md:min-w-[176px]" invertForDark />
           </Link>
           <p className="font-body text-lg italic leading-snug text-white/60">
             Visualizing Ethiopia&apos;s most critical trends in business,
