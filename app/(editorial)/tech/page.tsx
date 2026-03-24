@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function TechPage() {
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-24 md:px-10">
+    <main className="mx-auto w-full px-6 py-24 md:px-10">
       <h1 className="font-headline text-4xl font-bold tracking-tight text-on-surface">
         Tech
       </h1>

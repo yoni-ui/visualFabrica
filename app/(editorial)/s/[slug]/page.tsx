@@ -25,7 +25,7 @@ export default async function Page({
   if (!title) notFound();
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-24 md:px-10">
+    <main className="mx-auto w-full px-6 py-24 md:px-10">
       <p className="mb-4 font-label text-xs uppercase tracking-widest text-on-surface-variant">
         VisualFabrica
       </p>

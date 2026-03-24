@@ -10,7 +10,7 @@ type Props = {
  */
 export function EditorialViewportShell({ nav, children }: Props) {
   return (
-    <div className="editorial-fixed-viewport flex w-full flex-col overflow-hidden">
+    <div className="editorial-fixed-viewport mx-auto flex w-full flex-col overflow-hidden">
       {nav}
       <div className="editorial-fixed-viewport-scroll min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
         {children}

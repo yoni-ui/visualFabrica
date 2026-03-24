@@ -43,7 +43,7 @@ export default async function NewsDetailPage({ params }: Props) {
   if (!story) notFound();
 
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-16 md:px-10 md:py-24">
+    <main className="mx-auto w-full px-6 py-16 md:px-10 md:py-24">
       <Link
         href="/news"
         className="mb-10 inline-block font-label text-xs font-bold uppercase tracking-widest text-primary underline-offset-4 hover:underline"
@@ -73,7 +73,7 @@ export default async function NewsDetailPage({ params }: Props) {
           alt=""
           fill
           className="object-cover"
-          sizes="(max-width: 1440px) 100vw, 1440px"
+          sizes="(max-width: 1280px) 100vw, 1280px"
           priority
         />
       </div>

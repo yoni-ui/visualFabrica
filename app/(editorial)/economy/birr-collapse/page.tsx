@@ -27,7 +27,7 @@ const toc = [
 
 export default function BirrCollapsePage() {
   return (
-    <main className="mx-auto max-w-[1440px] px-6 py-16 md:px-10">
+    <main className="mx-auto w-full px-6 py-16 md:px-10">
       <header className="mb-20 max-w-5xl">
         <nav className="mb-8 flex flex-wrap items-center gap-2 font-label text-xs uppercase tracking-widest text-on-surface-variant">
           <Link href="/" className="hover:text-primary" prefetch>
@@ -104,7 +104,7 @@ export default function BirrCollapsePage() {
               alt="ETB/USD exchange rate performance infographic"
               fill
               priority
-              sizes="(max-width: 1440px) 100vw, 1440px"
+              sizes="(max-width: 1280px) 100vw, 1280px"
               className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 transition-opacity group-hover:opacity-100">

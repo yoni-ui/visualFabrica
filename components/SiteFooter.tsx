@@ -12,7 +12,7 @@ const footerLinks = [
 export function SiteFooter() {
   return (
     <footer className="mt-auto w-full bg-surface-dim">
-      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 md:px-10">
+      <div className="mx-auto grid w-full grid-cols-1 gap-8 px-6 py-16 md:grid-cols-2 md:px-10">
         <div>
           <Link href="/" prefetch className="mb-4 inline-block">
             <VisualFabricaLogo className="h-10 w-auto min-w-[148px] shrink-0 md:h-11 md:min-w-[168px]" />

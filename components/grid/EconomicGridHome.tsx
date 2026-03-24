@@ -27,7 +27,7 @@ export function EconomicGridHome({
   return (
     <EditorialViewportShell nav={<TopNav />}>
       <HomeCategoryStrip />
-      <main className="mx-auto max-w-[1920px]">
+      <main className="mx-auto w-full">
         <EconomicGridHero fx={fx} />
         <EconomicGridStoriesGrid stories={stories} />
         <StoriesPagination page={page} totalPages={totalPages} basePath="/" />

@@ -115,6 +115,8 @@ body {
 
 /* Public pages: fixed overall height; nav unchanged; content scrolls below */
 .editorial-fixed-viewport {
+  width: 100%;
+  max-width: 1280px;
   height: 1280px;
   max-height: 1280px;
 }

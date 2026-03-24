@@ -22,7 +22,7 @@ export function HomeCategoryStrip() {
       aria-label="Browse categories"
       className="border-b border-[#e4e2e1] bg-white"
     >
-      <div className="mx-auto max-w-[1920px] px-4 py-5 md:px-8 lg:px-10">
+      <div className="mx-auto w-full px-4 py-5 md:px-8 lg:px-10">
         <ul className="no-scrollbar flex snap-x snap-mandatory flex-nowrap items-start justify-between gap-3 overflow-x-auto pb-1 sm:justify-evenly sm:gap-4 md:gap-6 md:overflow-visible md:pb-0">
           {CATEGORIES.map((c) => (
             <li

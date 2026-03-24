@@ -23,7 +23,7 @@ export function StoriesPagination({ page, totalPages, basePath }: Props) {
   for (let i = start; i <= end; i += 1) nums.push(i);
 
   return (
-    <div className="mx-auto flex max-w-[1920px] items-center justify-center border-t border-[#e4e2e1] py-20">
+    <div className="mx-auto flex w-full items-center justify-center border-t border-[#e4e2e1] py-20">
       <nav className="flex items-center gap-2 font-sans-headline" aria-label="Pagination">
         {prev ? (
           <Link

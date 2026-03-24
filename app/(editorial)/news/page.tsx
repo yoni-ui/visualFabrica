@@ -25,7 +25,7 @@ export default async function NewsArchivePage({
   );
 
   return (
-    <main className="mx-auto max-w-[1920px] px-6 pb-16 pt-10 md:px-10">
+    <main className="mx-auto w-full px-6 pb-16 pt-10 md:px-10">
       <header className="mb-12 max-w-3xl">
         <p className="mb-2 font-label text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant">
           Archive
